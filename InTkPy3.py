@@ -1,5 +1,5 @@
-# Cidade
-from cidIUDS import Cidades
+# Clientes
+from cliIUDS import Clientes
 from db import db
 from tkinter import *
 import tkinter as tk
@@ -7,12 +7,18 @@ from tkinter import ttk
 from tkinter import messagebox
 import subprocess
 
-class CidadE:
+class Cliente:
     def __init__(self, master=None):
         self.fonte = ("Verdana", "8")
 
+        self.wdgt = Frame(master)
+        self.wdgt["pady"] = 10
+        self.wdgt["pady"] = 5
+        self.wdgt.pack()
+
         self.wdgt1 = Frame(master)
         self.wdgt1["pady"] = 10
+        self.wdgt1["pady"] = 5
         self.wdgt1.pack()
 
         self.wdgt2 = Frame(master)
@@ -35,131 +41,196 @@ class CidadE:
         self.wdgt5["pady"] = 5
         self.wdgt5.pack()
 
-        self.lblidcidade = Label(self.wdgt1, text="idCidade:", font=self.fonte, width=10)
-        self.lblidcidade.pack(side=LEFT)
-        self.txtidcidade = Entry(self.wdgt1)
-        self.txtidcidade["width"] = 14
-        self.txtidcidade["font"] = self.fonte
-        self.txtidcidade.pack(side=LEFT)
-        self.btnBuscar = Button(self.wdgt1, text="Buscar", font=self.fonte, width=10)
-        self.btnBuscar["command"] = self.buscarCid
+        self.wdgt6 = Frame(master)
+        self.wdgt6["padx"] = 20
+        self.wdgt6["pady"] = 5
+        self.wdgt6.pack()
+
+        self.wdgt7 = Frame(master)
+        self.wdgt7["padx"] = 20
+        self.wdgt7["pady"] = 5
+        self.wdgt7.pack()
+
+        self.lblidcliente = Label(self.wdgt, text="idCliente:", font=self.fonte, width=10)
+        self.lblidcliente.pack(side=LEFT)
+        self.txtidcliente = Entry(self.wdgt)
+        self.txtidcliente["width"] = 14
+        self.txtidcliente["font"] = self.fonte
+        self.txtidcliente.pack(side=LEFT)
+        self.btnBuscar = Button(self.wdgt, text="Buscar", font=self.fonte, width=10)
+        self.btnBuscar["command"] = self.buscarCli
         self.btnBuscar.pack(side=RIGHT)
 
-        self.lblnome = Label(self.wdgt2, text="Cidade:", font=self.fonte, width=10)
+        self.lblnome = Label(self.wdgt1, text="Cliente:", font=self.fonte, width=10)
         self.lblnome.pack(side=LEFT)
-        self.txtnome = Entry(self.wdgt2)
-        self.txtnome["width"] = 26
+        self.txtnome = Entry(self.wdgt1)
+        self.txtnome["width"] = 25
         self.txtnome["font"] = self.fonte
         self.txtnome.pack(side=LEFT)
 
-        self.lblest = Label(self.wdgt3, text="Estado:", font=self.fonte, width=10)
-        self.lblest.pack(side=LEFT)
-        self.comboest = ttk.Combobox(self.wdgt3, state="readonly",
-            values=["AM", "AC", "AL", "GO", "SP", "MG"], width=27
-        )
-        self.comboest.pack()
+        self.lblCidade = Label(self.wdgt2, text="Cidade:", font=self.fonte, width=10)
+        self.lblCidade.pack(side=LEFT)
+        self.comboCid = ttk.Combobox(self.wdgt2, state="", width=11)
+        self.comboCid.pack(side=LEFT)
+        self.bntInsert = Button(self.wdgt2, text="Busca cidade", font=self.fonte, width=12,
+                                command=self.popular_combobox)
+        self.bntInsert.pack(side=RIGHT)
 
-        self.bntInsert = Button(self.wdgt4, text="Inserir", font=self.fonte, width=15,
-                                command=self.inserirCid)
+        self.lblendereco = Label(self.wdgt3, text="Endereço:", font=self.fonte, width=10)
+        self.lblendereco.pack(side=LEFT)
+        self.txtendereco = Entry(self.wdgt3)
+        self.txtendereco["width"] = 25
+        self.txtendereco["font"] = self.fonte
+        self.txtendereco.pack(side=LEFT)
+
+        self.lbltelefone = Label(self.wdgt4, text="Telefone:", font=self.fonte, width=10)
+        self.lbltelefone.pack(side=LEFT)
+        self.txttelefone = Entry(self.wdgt4)
+        self.txttelefone["width"] = 25
+        self.txttelefone["font"] = self.fonte
+        self.txttelefone.pack(side=LEFT)
+
+        self.lblemail = Label(self.wdgt5, text="E-mail:", font=self.fonte, width=10)
+        self.lblemail.pack(side=LEFT)
+        self.txtemail = Entry(self.wdgt5)
+        self.txtemail["width"] = 25
+        self.txtemail["font"] = self.fonte
+        self.txtemail.pack(side=LEFT)
+
+        self.bntInsert = Button(self.wdgt6, text="Inserir", font=self.fonte, width=15,
+                                command=self.inserirCli)
+        self.bntInsert.pack(side=LEFT)
+        self.bntInsert = Button(self.wdgt6, text="Alterar", font=self.fonte, width=15,
+                                command=self.alterarCli)
+        self.bntInsert.pack(side=LEFT)
+        self.bntInsert = Button(self.wdgt6, text="Excluir", font=self.fonte, width=15,
+                                command=self.excluirCli)
         self.bntInsert.pack(side=LEFT)
 
-        self.bntAlterar = Button(self.wdgt4, text="Alterar", font=self.fonte, width=15)
-        self.bntAlterar["command"] = self.alterarCid
-        self.bntAlterar.pack(side=LEFT)
-
-        self.bntExcluir = Button(self.wdgt4, text="Excluir", font=self.fonte, width=15)
-        self.bntExcluir["command"] = self.excluirCid
-        self.bntExcluir.pack(side=LEFT)
-
-        self.lblmsg = Label(self.wdgt5, text="")
+        self.lblmsg = Label(self.wdgt7, text="")
         self.lblmsg["font"] = ("Verdana", "9", "italic")
         self.lblmsg.pack()
 
         # Configurando a Treeview
-        columns = ("ID", "Cidade", "Estado")  # Definindo as colunas
+        columns = ("ID", "Nome", "Endereço", "Telefone", "E-mail")  # Definindo as colunas
         self.treeview = ttk.Treeview(root, columns=columns, show='headings')
         for col in columns:
             self.treeview.heading(col, text=col)
-        self.treeview.bind("<<TreeviewSelect>>", self.buscarCidadeTree)
+        self.treeview.bind("<<TreeviewSelect>>", self.buscarClienteTree)
         self.treeview.pack(fill=tk.BOTH, expand=True)
 
         # Pegando os dados do banco e populando a Treeview
         data = fetch_data()
         populate_treeview(self.treeview, data)
 
-    def inserirCid(self):
-        cids = Cidades()
 
-        cids.cidade = self.txtnome.get()
-        cids.estado = self.comboest.get()
+    def inserirCli(self):
+        clie = Clientes()
 
-        self.lblmsg["text"] = cids.insertCid()
+        clie.cliente = self.txtnome.get()
 
+        clie.endereco = self.txtendereco.get()
+        clie.telefone = self.txttelefone.get()
+        clie.email = self.txtemail.get()
+
+        self.lblmsg["text"] = clie.insertCli()
+
+        self.txtidcliente.delete(0, END)
         self.txtnome.delete(0, END)
-        self.comboest.delete(0, END)
+
+        self.txtendereco.delete(0, END)
+        self.txttelefone.delete(0, END)
+        self.txtemail.delete(0, END)
 
         messagebox.showinfo(
-            message=f"Valores adicionados com sucesso!",  # {self.txtnome}
-            title="Inserção"
+            message=f"Valores inseridos com sucesso!", title="Inserção"
         )
 
-    def alterarCid(self):
-        cids = Cidades()
+    def alterarCli(self):
+        clie = Clientes()
 
-        cids.idcidade = self.txtidcidade.get()
-        cids.cidade = self.txtnome.get()
-        cids.estado = self.comboest.get()
+        clie.idcliente = self.txtidcliente.get()
+        clie.cliente = self.txtnome.get()
+        clie.endereco = self.txtendereco.get()
+        clie.telefone = self.txttelefone.get()
+        clie.email = self.txtemail.get()
 
-        self.lblmsg["text"] = cids.updateCid()
+        self.lblmsg["text"] = clie.updateCli()
 
-        self.txtidcidade.delete(0, END)
+        self.txtidcliente.delete(0, END)
         self.txtnome.delete(0, END)
-        self.comboest.delete(0, END)
+        self.txtendereco.delete(0, END)
+        self.txttelefone.delete(0, END)
+        self.txtemail.delete(0, END)
 
         messagebox.showinfo(
             message=f"Valores alterados com sucesso!", title="Alteração"
         )
 
-    def excluirCid(self):
-        cids = Cidades()
+    def excluirCli(self):
+        clie = Clientes()
 
-        cids.idcidade = self.txtidcidade.get()
+        clie.idcliente = self.txtidcliente.get()
 
-        self.lblmsg["text"] = cids.deleteCid()
+        self.lblmsg["text"] = clie.deleteCli()
 
-        self.txtidcidade.delete(0, END)
+        self.txtidcliente.delete(0, END)
         self.txtnome.delete(0, END)
-        self.comboest.delete(0, END)
+        self.txtendereco.delete(0, END)
+        self.txttelefone.delete(0, END)
+        self.txtemail.delete(0, END)
 
         messagebox.showinfo(
             message=f"Valores excluídos com sucesso.", title="Exclusão"
         )
 
-    def buscarCid(self):
-        cids = Cidades()
+    def buscarCli(self):
+        clie = Clientes()
 
-        idcidade = self.txtidcidade.get()
+        idcliente = self.txtidcliente.get()
 
-        self.lblmsg["text"] = cids.selectCid(idcidade)
-        self.txtidcidade.delete(0, END)
-        self.txtidcidade.insert(INSERT, cids.idcidade)
+        self.lblmsg["text"] = clie.selectCli(idcliente)
+        self.txtidcliente.delete(0, END)
+        self.txtidcliente.insert(INSERT, clie.idcliente)
         self.txtnome.delete(0, END)
-        self.txtnome.insert(INSERT, cids.nome)
-        self.comboest.insert(INSERT, cids.estado)
+        self.txtnome.insert(INSERT, clie.cliente)
+        self.txtendereco.delete(0, END)
+        self.txtendereco.insert(INSERT, clie.endereco)
+        self.txttelefone.delete(0, END)
+        self.txttelefone.insert(INSERT, clie.telefone)
+        self.txtemail.delete(0, END)
+        self.txtemail.insert(INSERT, clie.email)
 
-    def buscarCidadeTree(self, event):
+    def buscarClienteTree(self, event):
         seleciona_item = self.treeview.selection()
         if seleciona_item:
             # Obtém o item selecionado
             item = seleciona_item[0]
             values = self.treeview.item(item, 'values')
             # Preenche os campos de entrada com os dados do item selecionado
-            self.txtidcidade.delete(0, END)
-            self.txtidcidade.insert(INSERT, values[0])
+            self.txtidcliente.delete(0, END)
+            self.txtidcliente.insert(INSERT, values[0])
             self.txtnome.delete(0, END)
             self.txtnome.insert(INSERT, values[1])
-            self.comboest.delete(0, END)
-            self.comboest.insert(INSERT, values[2])
+            self.txttelefone.delete(0, END)
+            self.txttelefone.insert(INSERT, values[2])
+            self.txtemail.delete(0, END)
+            self.txtemail.insert(INSERT, values[3])
+
+    def popular_combobox(self):
+        # Conectar ao banco de dados
+        banco = db()
+        c = banco.cnxao.cursor()
+
+        # Executar a consulta
+        c.execute("SELECT cid_nome FROM tbl_cidades")
+        resul = c.fetchall()
+
+        # Popular o ComboBox
+        for r in resul:
+            self.comboCid.insert('end', r[0])
+
+        c.close()
 
 def abrirMain():
     subprocess.Popen(['python', 'InTkPymain.py'])
@@ -171,7 +242,7 @@ def fetch_data():
     c = banco.cnxao.cursor()
 
     # Executando uma consulta SQL para pegar todos os dados da tabela
-    c.execute("SELECT * FROM tbl_cidades")
+    c.execute("SELECT * FROM tbl_clientes")
     rows = c.fetchall()  # Buscando todos os resultados
     c.close()
 
@@ -181,7 +252,6 @@ def fetch_data():
 def populate_treeview(treeview, data):
     for row in data:
         treeview.insert("", "end", values=row)
-
 
 root = Tk()
 menubar = Menu(root)
@@ -194,5 +264,5 @@ root.state("zoomed")
 interface.add_command(label='Principal', command=abrirMain)
 
 
-CidadE(root)
+Cliente(root)
 root.mainloop()
