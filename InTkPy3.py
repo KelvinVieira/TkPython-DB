@@ -128,7 +128,7 @@ class Cliente:
         clie = Clientes()
 
         clie.cliente = self.txtnome.get()
-
+        clie.cidade = self.comboCid.get()
         clie.endereco = self.txtendereco.get()
         clie.telefone = self.txttelefone.get()
         clie.email = self.txtemail.get()
@@ -137,7 +137,7 @@ class Cliente:
 
         self.txtidcliente.delete(0, END)
         self.txtnome.delete(0, END)
-
+        self.comboCid.delete(0, END)
         self.txtendereco.delete(0, END)
         self.txttelefone.delete(0, END)
         self.txtemail.delete(0, END)
@@ -151,6 +151,7 @@ class Cliente:
 
         clie.idcliente = self.txtidcliente.get()
         clie.cliente = self.txtnome.get()
+        clie.cidade = self.comboCid.get()
         clie.endereco = self.txtendereco.get()
         clie.telefone = self.txttelefone.get()
         clie.email = self.txtemail.get()
@@ -159,6 +160,7 @@ class Cliente:
 
         self.txtidcliente.delete(0, END)
         self.txtnome.delete(0, END)
+        self.comboCid.delete(0, END)
         self.txtendereco.delete(0, END)
         self.txttelefone.delete(0, END)
         self.txtemail.delete(0, END)
@@ -176,6 +178,7 @@ class Cliente:
 
         self.txtidcliente.delete(0, END)
         self.txtnome.delete(0, END)
+        self.comboCid.delete(0, END)
         self.txtendereco.delete(0, END)
         self.txttelefone.delete(0, END)
         self.txtemail.delete(0, END)
@@ -194,6 +197,8 @@ class Cliente:
         self.txtidcliente.insert(INSERT, clie.idcliente)
         self.txtnome.delete(0, END)
         self.txtnome.insert(INSERT, clie.cliente)
+        self.comboCid.delete(0, END)
+        self.comboCid.insert(INSERT, clie.cidade)
         self.txtendereco.delete(0, END)
         self.txtendereco.insert(INSERT, clie.endereco)
         self.txttelefone.delete(0, END)
@@ -212,10 +217,14 @@ class Cliente:
             self.txtidcliente.insert(INSERT, values[0])
             self.txtnome.delete(0, END)
             self.txtnome.insert(INSERT, values[1])
+            self.comboCid.delete(0, END)
+            self.comboCid.insert(INSERT, values[2])
+            self.txtendereco.delete(0, END)
+            self.txtendereco.insert(INSERT, values[3])
             self.txttelefone.delete(0, END)
-            self.txttelefone.insert(INSERT, values[2])
+            self.txttelefone.insert(INSERT, values[4])
             self.txtemail.delete(0, END)
-            self.txtemail.insert(INSERT, values[3])
+            self.txtemail.insert(INSERT, values[5])
 
     def popular_combobox(self):
         # Conectar ao banco de dados
