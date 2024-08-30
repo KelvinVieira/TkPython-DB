@@ -2,54 +2,36 @@ from tkinter import *
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
+import subprocess
 
-    # Login windown)
-class login:
-    def __init__(self):
-        self.lgnwndw = tk.Tk()
-        self.lgnwndw.title("Login")
+# Janela principal(com menus acessando todas as outras aplicações), janela login
 
-        self.fnt = ("Verdana", "8")
+def abrirUser():
+    subprocess.Popen(['python', 'InTkPy.py'])
+    root.destroy()
 
-        self.wdgt = Frame(self.lgnwndw)
-        self.wdgt["padx"] = 20
-        self.wdgt["pady"] = 5
-        self.wdgt.pack()
+def abrirCid():
+    subprocess.Popen(['python', 'InTkPy2.py'])
+    root.destroy()
 
-        self.wdgt2 = Frame(self.lgnwndw)
-        self.wdgt2["padx"] = 20
-        self.wdgt2["pady"] = 5
-        self.wdgt2.pack()
+def abrirCli():
+    subprocess.Popen(['python', 'InTkPy3.py'])
+    root.destroy()
 
-        self.wdgt3 = Frame(self.lgnwndw)
-        self.wdgt3["padx"] = 20
-        self.wdgt3["pady"] = 5
-        self.wdgt3.pack()
+root = Tk()
+root.title("main")
 
-        self.lblusuario = Label(self.lgnwndw, text="Usuário:", font=self.fnt, width=10)
-        self.lblusuario.pack(side=LEFT)
-        self.txtusuario = Entry(self.lgnwndw)
-        self.txtusuario["width"] = 25
-        self.txtusuario["font"] = self.fnt
-        self.txtusuario.pack(side=LEFT)
+menubar = Menu(root)
 
-        self.lblsenha = Label(self.lgnwndw, text="Senha:", font=self.fnt, width=10)
-        self.lblsenha.pack(side=LEFT)
-        self.txtsenha = Entry(self.lgnwndw)
-        self.txtsenha["width"] = 25
-        self.txtsenha["show"] = "*"
-        self.txtsenha["font"] = self.fnt
-        self.txtsenha.pack(side=LEFT)
+root.config(menu=menubar)
+interface = Menu(menubar)
+menubar.add_cascade(label='Cadastros', menu=interface)
 
-        self.btn = tk.Button(self.lgnwndw, text='Login', command=self.verif)
-        self.btn["font"] = self.fnt
-        self.btn.pack(side=LEFT)
+# root.state("zoomed")
+interface.add_command(label='Usuário', command=abrirUser)
+interface.add_separator()
+interface.add_command(label='Cidade', command=abrirCid)
+interface.add_separator()
+interface.add_command(label='Clientes', command=abrirCli)
 
-        self.lgnwndw.mainloop()
-
-    def verif(self):
-        usr = self.txtusuario.get()
-        passwrd = self.txtsenha.get()
-        # if usr and passwrd == :
-
-        self.lgnwndw.mainloop()
+root.mainloop()
