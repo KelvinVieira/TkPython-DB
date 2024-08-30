@@ -4,6 +4,8 @@ from tkinter import *
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
+from tkinter import messagebox
+import subprocess
 
     # multipurpose window(usuário, cidade)
 class Application:
@@ -123,6 +125,18 @@ class Application:
         self.lblmsg["font"] = ("Verdana", "9", "italic")
         self.lblmsg.pack()
 
+        # Configurando a Treeview
+        columns = ("ID", "Nome", "Telefone", "E-mail", "Usuário","Senha")  # Definindo as colunas
+        self.treeview = ttk.Treeview(root, columns=columns, show='headings')
+        for col in columns:
+            self.treeview.heading(col, text=col)
+        self.treeview.bind("<<TreeviewSelect>>", self.buscarUsuarioTree)
+        self.treeview.pack(fill=tk.BOTH, expand=True)
+
+        # Pegando os dados do banco e populando a Treeview
+        data = fetch_data()
+        populate_treeview(self.treeview, data)
+
     def inserirUsuario(self):
         user = Usuarios()
 
@@ -140,6 +154,10 @@ class Application:
         self.txtemail.delete(0, END)
         self.txtusuario.delete(0, END)
         self.txtsenha.delete(0, END)
+
+        messagebox.showinfo(
+            message=f"Valores inseridos com sucesso!", title="Inserção"
+        )
 
     def alterarUsuario(self):
         user = Usuarios()
@@ -160,6 +178,10 @@ class Application:
         self.txtusuario.delete(0, END)
         self.txtsenha.delete(0, END)
 
+        messagebox.showinfo(
+            message=f"Valores alterados com sucesso!", title="Alteração"
+        )
+
     def excluirUsuario(self):
         user = Usuarios()
 
@@ -173,6 +195,10 @@ class Application:
         self.txtemail.delete(0, END)
         self.txtusuario.delete(0, END)
         self.txtsenha.delete(0, END)
+
+        messagebox.showinfo(
+            message=f"Valores excluídos com sucesso.", title="Exclusão"
+        )
 
     def buscarUsuario(self):
         user = Usuarios()
@@ -193,14 +219,29 @@ class Application:
         self.txtsenha.delete(0, END)
         self.txtsenha.insert(INSERT,user.senha)
 
-    def Open():
-        filedialog.asko
+    def buscarUsuarioTree(self, event):
+        seleciona_item = self.treeview.selection()
+        if seleciona_item:
+            # Obtém o item selecionado
+            item = seleciona_item[0]
+            values = self.treeview.item(item, 'values')
+            # Preenche os campos de entrada com os dados do item selecionado
+            self.txtidusuario.delete(0, END)
+            self.txtidusuario.insert(INSERT, values[0])
+            self.txtnome.delete(0, END)
+            self.txtnome.insert(INSERT, values[1])
+            self.txttelefone.delete(0, END)
+            self.txttelefone.insert(INSERT, values[2])
+            self.txtemail.delete(0, END)
+            self.txtemail.insert(INSERT, values[3])
+            self.txtusuario.delete(0, END)
+            self.txtusuario.insert(INSERT, values[4])
+            self.txtsenha.delete(0, END)
+            self.txtsenha.insert(INSERT, values[5])
 
-    def Save():
-        filedialog.asks
-
-    def Quit():
-        root.destroy()
+def abrirMain():
+    subprocess.Popen(['python', 'InTkPymain.py'])
+    root.destroy()
 
 def fetch_data():
     # Conectando ao banco de dados
@@ -208,7 +249,7 @@ def fetch_data():
     c = banco.cnxao.cursor()
 
     # Executando uma consulta SQL para pegar todos os dados da tabela
-    c.execute("SELECT * FROM tbl_cidades")
+    c.execute("SELECT * FROM tbl_usuarios")
     rows = c.fetchall()  # Buscando todos os resultados
     c.close()
 
@@ -220,28 +261,15 @@ def populate_treeview(treeview, data):
         treeview.insert("", "end", values=row)
 
 root = Tk()
+root.title("Usuários")
 menubar = Menu(root)
 
 root.config(menu=menubar)
 interface = Menu(menubar)
-menubar.add_cascade(label='Arquivo', menu=interface)
+menubar.add_cascade(label='Páginas', menu=interface)
 
-# root.state("zoomed")
-# interface.add_command(label='Cidade', command=Applica)
-interface.add_separator()
-# interface.add_command(label='Clientes', command=Quit)
-
-# Configurando a Treeview
-columns = ("ID", "Cidade", "Estado")  # Definindo as colunas
-treeview = ttk.Treeview(root, columns=columns, show='headings')
-for col in columns:
-    treeview.heading(col, text=col)
-
-treeview.pack(fill=tk.BOTH, expand=True)
-
-# Pegando os dados do banco e populando a Treeview
-data = fetch_data()
-populate_treeview(treeview, data)
+root.state("zoomed")
+interface.add_command(label='Principal', command=abrirMain)
 
 # Iniciando aplicação
 Application(root)
