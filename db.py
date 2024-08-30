@@ -37,6 +37,7 @@ class db:  # Classe de conexão ao banco de dados
         c.execute("""create table if not exists tbl_clientes (
         cli_id integer primary key autoincrement,
         cli_nome text,
+        cli_cid text,
         cli_ende text,
         cli_tele text,
         cli_email text)""")
