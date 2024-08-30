@@ -3,10 +3,11 @@ from db import db
 
 
 class Clientes(object):
-    def __init__(self, idcli=0, nme="", ende="", tel="", eml=""):
+    def __init__(self, idcli=0, nme="", ende="", cid="", tel="", eml=""):
         self.info = {}
         self.idcliente = idcli
         self.cliente = nme
+        self.cidade = cid
         self.endereco = ende
         self.telefone = tel
         self.email = eml
@@ -16,8 +17,8 @@ class Clientes(object):
         try:
             c = banco.cnxao.cursor()
             c.execute(
-                "insert into tbl_clientes (cli_nome, cli_ende, cli_tele, cli_email) values ('" + self.cliente + "', '" +
-                self.endereco + "', '" + self.telefone + "', '" + self.email + "' )")
+                "insert into tbl_clientes (cli_nome,cli_cid, cli_ende, cli_tele, cli_email) values ('" + self.cliente + "', '" +
+                self.cidade + "', '" + self.endereco + "', '" + self.telefone + "', '" + self.email + "' )")
             banco.cnxao.commit()
             c.close()
             return "Usuário cadastrado com sucesso!"
@@ -28,7 +29,7 @@ class Clientes(object):
         banco = db()
         try:
             c = banco.cnxao.cursor()
-            c.execute("update tbl_clientes set cli_nome = '" + self.nome + "', cli_ende = '" + self.endereco + "', cli_tele = '" + self.telefone +
+            c.execute("update tbl_clientes set cli_nome = '" + self.nome + "', cli_cid = '" + self.cidade + "', cli_ende = '" + self.endereco + "', cli_tele = '" + self.telefone +
             "', cli_email = '" + self.email +
             "' where cli_id = " + self.idcliente + " ")
             banco.cnxao.commit()
@@ -56,9 +57,10 @@ class Clientes(object):
             for linha in c:
                 self.idcliente = linha[0]
                 self.cliente = linha[1]
-                self.endereco = linha[2]
-                self.telefone = linha[3]
-                self.email = linha[4]
+                self.cidade = linha[2]
+                self.endereco = linha[3]
+                self.telefone = linha[4]
+                self.email = linha[5]
             c.close()
             return "Busca feita com sucesso!"
         except:
