@@ -42,22 +42,21 @@ class login:
         self.btn["font"] = self.fnt
         self.btn.pack(side=LEFT)
 
-    def verif(self):
+    def verif(self):  # Método de verificação
         banco = db()
         c = banco.cnxao.cursor()
 
-        usr = self.txtusuario.get()
+        usr = self.txtusuario.get()  # Obtém por método get os valores inseridos pelo usuário
         passwrd = self.txtsenha.get()
-        c.execute('SELECT usu_usuario, usu_senha FROM tbl_usuarios WHERE usu_usuario=? AND usu_senha=?', (usr, passwrd))
-        resultado = c.fetchone()
+        c.execute('SELECT usu_usuario, usu_senha FROM tbl_usuarios WHERE usu_usuario=? AND usu_senha=?', (usr, passwrd))  # Executa por c o comando SQL, com usuário e senha sendo passados 
+        resultado = c.fetchone()  # Atribui todos os resultados de c a variável resultado
 
-        if resultado:
+        if resultado:  # Se resultado for fatual
             messagebox.showinfo('Sucesso', 'Login realizado com sucesso!')
-            # Aqui você pode adicionar a lógica para abrir uma nova janela ou realizar outras ações
             self.txtusuario.delete(0, END)
             self.txtsenha.delete(0, END)
 
-            self.opnMain()
+            self.opnMain()  # É aberto a main
             root.destroy()
 
         else:
