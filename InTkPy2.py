@@ -54,7 +54,7 @@ class CidadE:
 
         self.lblest = Label(self.wdgt3, text="Estado:", font=self.fonte, width=10)
         self.lblest.pack(side=LEFT)
-        self.comboest = ttk.Combobox(self.wdgt3, state="readonly",
+        self.comboest = ttk.Combobox(self.wdgt3, state="readonly",  # Criação de combobox, em widget 3, com suas configurações próprias, e valores
             values=["AM", "AC", "AL", "GO", "SP", "MG"], width=27
         )
         self.comboest.pack()
