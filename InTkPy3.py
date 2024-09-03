@@ -70,10 +70,10 @@ class Cliente:
 
         self.lblCidade = Label(self.wdgt2, text="Cidade:", font=self.fonte, width=10)
         self.lblCidade.pack(side=LEFT)
-        self.comboCid = ttk.Combobox(self.wdgt2, state="", width=11)
+        self.comboCid = ttk.Combobox(self.wdgt2, state="", width=11)  # Outra criação de combobox, porém...
         self.comboCid.pack(side=LEFT)
         self.bntInsert = Button(self.wdgt2, text="Busca cidade", font=self.fonte, width=12,
-                                command=self.popular_combobox)
+                                command=self.popular_combobox)  # ... populado por um método, conectado a base de dados, mas, somente apartir da seleção deste botão
         self.bntInsert.pack(side=RIGHT)
 
         self.lblendereco = Label(self.wdgt3, text="Endereço:", font=self.fonte, width=10)
@@ -226,9 +226,9 @@ class Cliente:
             self.txtemail.delete(0, END)
             self.txtemail.insert(INSERT, values[5])
 
-    def popular_combobox(self):
+    def popular_combobox(self):  # Método para população da combobox...
         # Conectar ao banco de dados
-        banco = db()
+        banco = db()  # ... com conexão ao banco de dados(feita a partir do arquivo classe db) permitindo a combobox ter somente valores do mesmo
         c = banco.cnxao.cursor()
 
         # Executar a consulta
