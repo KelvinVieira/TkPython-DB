@@ -33,14 +33,20 @@ class Cidades(object):
 
     def deleteCid(self):
         banco = db()
-        try:
-            c = banco.cnxao.cursor()
-            c.execute("delete from tbl_cidades where cid_id = " + self.idcidade + " ")
-            banco.cnxao.commit()
-            c.close()
-            return "Usuário excluído com sucesso!"
-        except:
-            return "Ocorreu um erro na exclusão do usuário"
+        c = banco.cnxao.cursor()
+        c.execute("SELECT cl.cli_cid, ci.cid_nome FROM tbl_clientes cl INNER JOIN tbl_cidades ci ON cl.cli_cid = ci.cid_nome WHERE cl.cli_cid = " + self.cidade + " ")
+        # SELECT us.usu_cid, ci.cid_nome FROM tbl_usuario us INNER JOIN tbl_cidade ci ON us.usu_cid = ci.cid_nome WHERE us.usu_cid = 'Jataí'
+        r = c.fetchall()
+        if r:
+            return "Componente cidade já é utilizado por outra tabela. Não é possível fazer exclusão!"
+        else:
+            try:
+                c.execute("delete from tbl_cidades where cid_id = " + self.idcidade + " ")
+                banco.cnxao.commit()
+                c.close()
+                return "Valores excluídos com sucesso!"
+            except:
+                return "Ocorreu um erro na exclusão do usuário"
 
     def selectCid(self, idcidade):
         banco = db()
