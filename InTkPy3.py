@@ -7,6 +7,7 @@ from tkinter import ttk
 from tkinter import messagebox
 import subprocess
 
+# Fix combobox
 class Cliente:
     def __init__(self, master=None):
         self.fonte = ("Verdana", "8")
@@ -70,10 +71,10 @@ class Cliente:
 
         self.lblCidade = Label(self.wdgt2, text="Cidade:", font=self.fonte, width=10)
         self.lblCidade.pack(side=LEFT)
-        self.comboCid = ttk.Combobox(self.wdgt2, state="", width=11)  # Outra criação de combobox, porém...
+        self.comboCid = ttk.Combobox(self.wdgt2, state="", width=11)
         self.comboCid.pack(side=LEFT)
         self.bntInsert = Button(self.wdgt2, text="Busca cidade", font=self.fonte, width=12,
-                                command=self.popular_combobox)  # ... populado por um método, conectado a base de dados, mas, somente apartir da seleção deste botão
+                                command=self.popular_combobox)
         self.bntInsert.pack(side=RIGHT)
 
         self.lblendereco = Label(self.wdgt3, text="Endereço:", font=self.fonte, width=10)
@@ -112,7 +113,7 @@ class Cliente:
         self.lblmsg.pack()
 
         # Configurando a Treeview
-        columns = ("ID", "Nome", "Endereço", "Telefone", "E-mail")  # Definindo as colunas
+        columns = ("ID", "Nome", "Endereço", "Telefone", "E-mail", "Cidade")  # Definindo as colunas
         self.treeview = ttk.Treeview(root, columns=columns, show='headings')
         for col in columns:
             self.treeview.heading(col, text=col)
@@ -226,9 +227,9 @@ class Cliente:
             self.txtemail.delete(0, END)
             self.txtemail.insert(INSERT, values[5])
 
-    def popular_combobox(self):  # Método para população da combobox...
+    def popular_combobox(self):
         # Conectar ao banco de dados
-        banco = db()  # ... com conexão ao banco de dados(feita a partir do arquivo classe db) permitindo a combobox ter somente valores do mesmo
+        banco = db()
         c = banco.cnxao.cursor()
 
         # Executar a consulta
