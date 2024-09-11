@@ -7,6 +7,7 @@ from tkinter import ttk
 from tkinter import messagebox
 import subprocess
 
+#Não deixar excluír cidade se estiver sendo usada em Clientes, criar impressão dos dados dos cadastros em arquívo PDF, e permitir visualizar o mesmo, em todos os cadastros
 class CidadE:
     def __init__(self, master=None):
         self.fonte = ("Verdana", "8")
@@ -54,7 +55,7 @@ class CidadE:
 
         self.lblest = Label(self.wdgt3, text="Estado:", font=self.fonte, width=10)
         self.lblest.pack(side=LEFT)
-        self.comboest = ttk.Combobox(self.wdgt3, state="readonly",  # Criação de combobox, em widget 3, com suas configurações próprias, e valores
+        self.comboest = ttk.Combobox(self.wdgt3, state="readonly",
             values=["AM", "AC", "AL", "GO", "SP", "MG"], width=27
         )
         self.comboest.pack()
@@ -123,6 +124,7 @@ class CidadE:
     def excluirCid(self):
         cids = Cidades()
 
+        cids.cidade = self.txtnome.get()
         cids.idcidade = self.txtidcidade.get()
 
         self.lblmsg["text"] = cids.deleteCid()
