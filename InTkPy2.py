@@ -6,8 +6,13 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 import subprocess
+from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+import os
 
-#Não deixar excluír cidade se estiver sendo usada em Clientes, criar impressão dos dados dos cadastros em arquívo PDF, e permitir visualizar o mesmo, em todos os cadastros
+#Não deixar excluír cidade se estiver sendo usada em Clientes, criar impressão dos dados dos cadastros em arquívo PDF, e permitir visualizar o mesmo, em todos os cadastros /feedback/datagrip; stefanini
+banco = db()
+c = banco.cnxao.cursor()
 class CidadE:
     def __init__(self, master=None):
         self.fonte = ("Verdana", "8")
@@ -72,6 +77,14 @@ class CidadE:
         self.bntExcluir["command"] = self.excluirCid
         self.bntExcluir.pack(side=LEFT)
 
+        self.bntPDF = Button(self.wdgt4, text="Criar PDF", font=self.fonte, width=15)
+        self.bntPDF["command"] = self.cria_PDF
+        self.bntPDF.pack(side=LEFT)
+
+        self.bntPDF2 = Button(self.wdgt4, text="Visualizar PDF", font=self.fonte, width=15)
+        self.bntPDF2["command"] = self.ver_PDF
+        self.bntPDF2.pack(side=LEFT)
+
         self.lblmsg = Label(self.wdgt5, text="")
         self.lblmsg["font"] = ("Verdana", "9", "italic")
         self.lblmsg.pack()
@@ -133,10 +146,6 @@ class CidadE:
         self.txtnome.delete(0, END)
         self.comboest.delete(0, END)
 
-        messagebox.showinfo(
-            message=f"Valores excluídos com sucesso.", title="Exclusão"
-        )
-
     def buscarCid(self):
         cids = Cidades()
 
@@ -162,6 +171,43 @@ class CidadE:
             self.txtnome.insert(INSERT, values[1])
             self.comboest.delete(0, END)
             self.comboest.insert(INSERT, values[2])
+
+    def cria_PDF(self):
+        c.execute("SELECT * FROM tbl_cidades")
+        dados = c.fetchall()
+        c.close()
+
+        pdf_file = SimpleDocTemplate("cidades.pdf")
+        elements = []
+
+        # Criar a tabela para o PDF
+        data = []
+        for row in dados:
+            data.append(row)
+        column_headers = ['Coluna 1', 'Coluna 2', 'Coluna 3']
+        data = [column_headers]
+        table_style = TableStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                  ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+                                  ('FONTSIZE', (0, 0), (-1, -1), 10)])
+        table = Table(data)
+        table.setStyle(table_style)
+        elements.append(table)
+
+        # Adicionar a tabela ao documento e salvar
+        pdf_file.build(elements)
+
+        self.lblmsg["text"] = "PDF criado com sucesso."
+
+        messagebox.showinfo(
+            message=f"PDF criado com sucesso!", title="PDF"
+        )
+
+    def ver_PDF(self):
+        try:
+            os.startfile('cidades.pdf')
+            print("PDF aberto com sucesso!")
+        except Exception as e:
+            print(f"Erro ao abrir o PDF, não criado ou: {str(e)}")
 
 def abrirMain():
     subprocess.Popen(['python', 'InTkPymain.py'])
