@@ -6,6 +6,9 @@ from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
 import subprocess
+from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+import os
 
 banco = db()
 c = banco.cnxao.cursor()
@@ -122,12 +125,20 @@ class Application:
         self.bntExcluir["command"] = self.excluirUsuario
         self.bntExcluir.pack(side=LEFT)
 
+        self.bntPDF = Button(self.container8, text="Criar PDF", font=self.fonte, width=15)
+        self.bntPDF["command"] = self.cria_PDF
+        self.bntPDF.pack(side=LEFT)
+
+        self.bntPDF2 = Button(self.container8, text="Visualizar PDF", font=self.fonte, width=15)
+        self.bntPDF2["command"] = self.ver_PDF
+        self.bntPDF2.pack(side=LEFT)
+
         self.lblmsg = Label(self.container9, text="")
         self.lblmsg["font"] = ("Verdana", "9", "italic")
         self.lblmsg.pack()
 
         # Configurando a Treeview
-        columns = ("ID", "Nome", "Telefone", "E-mail", "Usuário","Senha")  # Definindo as colunas
+        columns = ("ID", "Nome", "Telefone", "E-mail", "Usuário", "Senha")  # Definindo as colunas
         self.treeview = ttk.Treeview(root, columns=columns, show='headings')
         for col in columns:
             self.treeview.heading(col, text=col)
@@ -239,6 +250,47 @@ class Application:
             self.txtusuario.insert(INSERT, values[4])
             self.txtsenha.delete(0, END)
             self.txtsenha.insert(INSERT, values[5])
+
+    def cria_PDF(self):
+        c.execute("SELECT * FROM tbl_usuarios")
+        dados = c.fetchall()
+        c.close()
+
+        pdf_file = SimpleDocTemplate("usuarios.pdf")
+        elements = []
+
+        # Criar a tabela para o PDF
+        column_headers = ['ID', 'Nome', 'Telefone', 'E-mail', 'Usuário', 'Senha']
+        data = []
+        for row in dados:
+            data.append(row)
+
+        data = [column_headers]
+        for item in self.treeview.get_children():
+            values = self.treeview.item(item, 'values')
+            data.append(values)
+        table_style = TableStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                  ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+                                  ('FONTSIZE', (0, 0), (-1, -1), 10)])
+        table = Table(data)
+        table.setStyle(table_style)
+        elements.append(table)
+
+        # Adicionar a tabela ao documento e salvar
+        pdf_file.build(elements)
+
+        self.lblmsg["text"] = "PDF criado com sucesso."
+
+        messagebox.showinfo(
+            message=f"PDF criado com sucesso!", title="PDF"
+        )
+
+    def ver_PDF(self):
+        try:
+            os.startfile('usuarios.pdf')
+            print("PDF aberto com sucesso!")
+        except Exception as e:
+            print(f"Erro ao abrir o PDF, não criado ou: {str(e)}")
 
 def abrirMain():
     subprocess.Popen(['python', 'InTkPymain.py'])
