@@ -6,6 +6,9 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 import subprocess
+from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+import os
 
 banco = db()
 c = banco.cnxao.cursor()
@@ -108,6 +111,14 @@ class Cliente:
         self.bntInsert = Button(self.wdgt6, text="Excluir", font=self.fonte, width=15,
                                 command=self.excluirCli)
         self.bntInsert.pack(side=LEFT)
+
+        self.bntPDF = Button(self.wdgt6, text="Criar PDF", font=self.fonte, width=15)
+        self.bntPDF["command"] = self.cria_PDF
+        self.bntPDF.pack(side=LEFT)
+
+        self.bntPDF2 = Button(self.wdgt6, text="Visualizar PDF", font=self.fonte, width=15)
+        self.bntPDF2["command"] = self.ver_PDF
+        self.bntPDF2.pack(side=LEFT)
 
         self.lblmsg = Label(self.wdgt7, text="")
         self.lblmsg["font"] = ("Verdana", "9", "italic")
@@ -242,6 +253,47 @@ class Cliente:
             self.comboCid.insert('end', r[0])
 
         c.close()
+
+    def cria_PDF(self):
+        c.execute("SELECT * FROM tbl_clientes")
+        dados = c.fetchall()
+        c.close()
+
+        pdf_file = SimpleDocTemplate("clientes.pdf")
+        elements = []
+
+        # Criar a tabela para o PDF
+        column_headers = ['ID', 'Nome', 'Endereço', 'Telefone', 'E-mail', 'Cidade']
+        data = []
+        for row in dados:
+            data.append(row)
+
+        data = [column_headers]
+        for item in self.treeview.get_children():
+            values = self.treeview.item(item, 'values')
+            data.append(values)
+        table_style = TableStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                  ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+                                  ('FONTSIZE', (0, 0), (-1, -1), 10)])
+        table = Table(data)
+        table.setStyle(table_style)
+        elements.append(table)
+
+        # Adicionar a tabela ao documento e salvar
+        pdf_file.build(elements)
+
+        self.lblmsg["text"] = "PDF criado com sucesso."
+
+        messagebox.showinfo(
+            message=f"PDF criado com sucesso!", title="PDF"
+        )
+
+    def ver_PDF(self):
+        try:
+            os.startfile('clientes.pdf')
+            print("PDF aberto com sucesso!")
+        except Exception as e:
+            print(f"Erro ao abrir o PDF, não criado ou: {str(e)}")
 
 def abrirMain():
     subprocess.Popen(['python', 'InTkPymain.py'])
