@@ -181,11 +181,18 @@ class CidadE:
         elements = []
 
         # Criar a tabela para o PDF
+        column_headers = ['ID', 'Cidade', 'Estado']
         data = []
         for row in dados:
             data.append(row)
-        column_headers = ['Coluna 1', 'Coluna 2', 'Coluna 3']
+
+        # Criar uma lista de listas para representar os dados da tabela, incluindo os cabeçalhos
         data = [column_headers]
+        for item in self.treeview.get_children():
+            values = self.treeview.item(item, 'values')
+            data.append(values)
+
+        # Criar a tabela
         table_style = TableStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER'),
                                   ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
                                   ('FONTSIZE', (0, 0), (-1, -1), 10)])
