@@ -7,7 +7,8 @@ from tkinter import ttk
 from tkinter import messagebox
 import subprocess
 
-# Fix combobox
+banco = db()
+c = banco.cnxao.cursor()
 class Cliente:
     def __init__(self, master=None):
         self.fonte = ("Verdana", "8")
